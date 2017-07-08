@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Specialized;
 
 namespace Battleship
 {
@@ -13,15 +14,35 @@ namespace Battleship
         {
             var player1 = new PlayerBattleArea(5, 5);
 
-            player1.AddShip(new BattleShip(BattleShipType.Q, 1, 1), new BattleBoard.BoardPosition(1, 1));
-            player1.AddShip(new BattleShip(BattleShipType.P, 2, 1), new BattleBoard.BoardPosition(4, 4));
+            player1.AddShip(new BattleShip(BattleShipType.Q, 1, 1), new BattleBoard.Position(1, 1));
+            player1.AddShip(new BattleShip(BattleShipType.P, 2, 1), new BattleBoard.Position(4, 4));
+
+            player1.AddAttackSequence(new List<Attack> {
+                new Attack(1,2),
+                new Attack(2,2),
+                new Attack(2,2),
+                new Attack(2,3)
+            });
 
             var player2 = new PlayerBattleArea(5, 5);
 
-            player2.AddShip(new BattleShip(BattleShipType.Q, 1, 1), new BattleBoard.BoardPosition(2, 2));
-            player2.AddShip(new BattleShip(BattleShipType.P, 2, 1), new BattleBoard.BoardPosition(3, 3));
+            player2.AddShip(new BattleShip(BattleShipType.Q, 1, 1), new BattleBoard.Position(2, 2));
+            player2.AddShip(new BattleShip(BattleShipType.P, 2, 1), new BattleBoard.Position(3, 3));
 
-            var game = new Game(new PlayerBattleArea(5, 5), new PlayerBattleArea(5, 5));
+            player2.AddAttackSequence(new List<Attack> {
+                new Attack(1,1),
+                new Attack(2,2),
+                new Attack(2,3),
+                new Attack(1,1),
+                new Attack(4,1),
+                new Attack(5,1),
+                new Attack(4,4),
+                new Attack(4,4),
+                new Attack(4,5),
+                new Attack(4,5)
+            });
+
+            var game = new Game(player1, player2);
             game.AutoPlay();
         }
     }
@@ -35,15 +56,23 @@ namespace Battleship
             Board = new BattleBoard(height, width);
         }
 
-        #region Board
-        public void AddShip(BattleShip ship, BattleBoard.BoardPosition position)
+        #region Configuration
+        public void AddShip(BattleShip ship, BattleBoard.Position position)
         {
             Board.AddShip(ship, position);
         }
+
+        public void AddAttackSequence(List<Attack> attackSequence)
+        {
+
+        }
         #endregion
 
-        #region Ship
+        #region Gameplay
+        public void HandleAttack()
+        {
 
+        }
         #endregion
     }
 
@@ -108,17 +137,17 @@ namespace Battleship
 
     partial class BattleBoard : IBattleBoard
     {
-        public class BoardPosition : IBoardPosition
+        public class Position : IBoardPosition
         {
             public int Row { get; private set; }
             public int Column { get; private set; }
 
-            public BoardPosition(int row, int column)
+            public Position(int row, int column)
             {
                 Row = row;
                 Column = column;
             }
-            public BoardPosition(char row, int column)
+            public Position(char row, int column)
             {
                 //TODO: Implement this later
             }
@@ -127,7 +156,7 @@ namespace Battleship
 
     class Game
     {
-        public Game(PlayerBattleArea playerA, PlayerBattleArea playerB)
+        public Game(PlayerBattleArea player1, PlayerBattleArea player2)
         {
 
         }
@@ -154,5 +183,30 @@ namespace Battleship
     {
         IBattleShip this[int i, int j] { get; }
         bool AddShip(IBattleShip ship, IBoardPosition position);
+    }
+
+    class AttackSequence : List<Attack>
+    {
+
+    }
+
+    class Attack : IBoardPosition
+    {
+        public int Row { get; private set; }
+        public int Column { get; private set; }
+        public AttackResult Result { get; set; }
+
+        public Attack(int row, int column)
+        {
+            Row = row;
+            Column = column;
+            Result = AttackResult.Unknown;
+        }
+    }
+    enum AttackResult
+    {
+        Miss,
+        Hit,
+        Unknown
     }
 }
