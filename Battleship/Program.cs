@@ -117,8 +117,7 @@ namespace Battleship
         {
         }
     }
-
-
+    
     interface IBattleShip
     {
         BattleShipType Type { get; }
