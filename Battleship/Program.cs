@@ -12,11 +12,9 @@ namespace Battleship
         static void Main(string[] args)
         {
             var player1 = new PlayerBattleArea(5, 5);
-            player1.AddShips(new[]
-			{
-				new BattleShip(BattleShipType.P, 1, 1),
-				new BattleShip(BattleShipType.P, 1, 1),
-			});
+
+            player1.AddShip(new BattleShip(BattleShipType.P, 1, 1), new BattleBoard.BoardPosition(1, 1));
+            player1.AddShip(new BattleShip(BattleShipType.P, 1, 1), new BattleBoard.BoardPosition(1, 1));
 
             var game = new Game(new PlayerBattleArea(5, 5), new PlayerBattleArea(5, 5));
             game.AutoPlay();
@@ -32,20 +30,10 @@ namespace Battleship
             Board = new BattleBoard(height, width);
         }
 
-        public PlayerBattleArea(int height, int width, IEnumerable<BattleShip> ships)
-            : this(height, width)
-        {
-            AddShips(ships);
-        }
-
         #region Board
-        public void AddShip(BattleShip ship)
+        public void AddShip(BattleShip ship, BattleBoard.BoardPosition position)
         {
-            Board.AddShip(ship);
-        }
-        public void AddShips(IEnumerable<BattleShip> ships)
-        {
-            Board.AddShips(ships);
+            Board.AddShip(ship, position);
         }
         #endregion
 
@@ -74,7 +62,7 @@ namespace Battleship
         }
     }
 
-    class BattleBoard : IBattleBoard
+    partial class BattleBoard : IBattleBoard
     {
         private IBattleShip[,] board { get; set; }
 
@@ -95,14 +83,29 @@ namespace Battleship
             }
         }
 
-        public bool AddShip(IBattleShip ship)
+        public bool AddShip(IBattleShip ship, IBoardPosition position)
         {
-            return false;
+            this[position.Row, position.Column] = ship;
+            return true;
         }
+    }
 
-        public bool AddShips(IEnumerable<IBattleShip> ship)
+    partial class BattleBoard : IBattleBoard
+    {
+        public class BoardPosition : IBoardPosition
         {
-            return false;
+            public int Row { get; private set; }
+            public int Column { get; private set; }
+
+            public BoardPosition(int row, int column)
+            {
+                Row = row;
+                Column = column;
+            }
+            public BoardPosition(char row, int column)
+            {
+                //TODO: Implement this later
+            }
         }
     }
 
@@ -117,7 +120,13 @@ namespace Battleship
         {
         }
     }
-    
+
+    interface IBoardPosition
+    {
+        int Row { get; }
+        int Column { get; }
+    }
+
     interface IBattleShip
     {
         BattleShipType Type { get; }
@@ -128,7 +137,6 @@ namespace Battleship
     interface IBattleBoard
     {
         IBattleShip this[int i, int j] { get; }
-        bool AddShip(IBattleShip ship);
-        bool AddShips(IEnumerable<IBattleShip> ship);
+        bool AddShip(IBattleShip ship, IBoardPosition position);
     }
 }
