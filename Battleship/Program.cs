@@ -90,14 +90,17 @@ namespace Battleship
 
         public bool AddShip(IBattleShip ship, IBoardPosition position)
         {
-            for (int i = position.Row - 1; i < position.Row + ship.Height; i++)
+            var y = position.Row - 1;
+            var x = position.Column - 1;
+
+            for (int i = y; i < y + ship.Height; i++)
             {
-                for (int j = position.Column - 1; j < position.Column + ship.Width; j++)
+                for (int j = x; j < x + ship.Width; j++)
                 {
                     this[i, j] = ship;
                 }
             }
-            
+
             //this[position.Row - 1, position.Column - 1] = ship;
             return true;
         }
