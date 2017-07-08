@@ -223,15 +223,18 @@ namespace Battleship
                 {
                     var attack = attacker.AttackSequence.Dequeue();
                     defender.HandleAttack(attack);
+                    previousWinner = attack.Result == AttackResult.Hit ? attacker : defender;
+
                     Console.WriteLine("{0} fires a missle with target {1},{2} which got {3}", attacker.Id, attack.Row, attack.Column, attack.Result.ToString().ToLower());
                 }
                 else
                 {
                     Console.WriteLine("{0} has no more missiles left to launch", attacker.Id);
+                    previousWinner = defender;
                 }
                 if (defender.ShipsAlive < 1)
                 {
-                    Console.WriteLine("{0} won th battle", attacker.Id);
+                    Console.WriteLine("{0} won the battle", attacker.Id);
                 }
             }
         }
