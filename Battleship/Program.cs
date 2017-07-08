@@ -219,8 +219,20 @@ namespace Battleship
             while (player1.AttackSequence.Any() || player2.AttackSequence.Any())
             {
                 SelectPlayers(out attacker, out defender, previousWinner);
-                var attack = attacker.AttackSequence.Dequeue();
-                defender.HandleAttack(attack);
+                if (attacker.AttackSequence.Count > 0)
+                {
+                    var attack = attacker.AttackSequence.Dequeue();
+                    defender.HandleAttack(attack);
+                    Console.WriteLine("{0} fires a missle with target {1},{2} which got {3}", attacker.Id, attack.Row, attack.Column, attack.Result.ToString().ToLower());
+                }
+                else
+                {
+                    Console.WriteLine("{0} has no more missiles left to launch", attacker.Id);
+                }
+                if (defender.ShipsAlive < 1)
+                {
+                    Console.WriteLine("{0} won th battle", attacker.Id);
+                }
             }
         }
 
@@ -291,5 +303,10 @@ namespace Battleship
         Fresh,
         Hit,
         Destroyed
+    }
+
+    class TextConsole
+    {
+
     }
 }
