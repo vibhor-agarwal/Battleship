@@ -11,33 +11,34 @@ namespace Battleship
     {
         static void Main(string[] args)
         {
-            var player1 = new BattleArea(5, 5);
+            var player1 = new PlayerBattleArea(5, 5);
             player1.AddShips(new[]
 			{
 				new BattleShip(BattleShipType.P, 1, 1),
 				new BattleShip(BattleShipType.P, 1, 1),
 			});
 
-            var game = new Game(new BattleArea(5, 5), new BattleArea(5, 5));
+            var game = new Game(new PlayerBattleArea(5, 5), new PlayerBattleArea(5, 5));
             game.AutoPlay();
         }
     }
 
-    class BattleArea
+    class PlayerBattleArea
     {
         public BattleBoard Board { get; private set; }
 
-        public BattleArea(int width, int height)
+        public PlayerBattleArea(int height, int width)
         {
-            Board = new BattleBoard(width, height);
+            Board = new BattleBoard(height, width);
         }
 
-        public BattleArea(int width, int height, IEnumerable<BattleShip> ships)
-            : this(width, height)
+        public PlayerBattleArea(int height, int width, IEnumerable<BattleShip> ships)
+            : this(height, width)
         {
             AddShips(ships);
         }
 
+        #region Board
         public void AddShip(BattleShip ship)
         {
             Board.AddShip(ship);
@@ -46,6 +47,11 @@ namespace Battleship
         {
             Board.AddShips(ships);
         }
+        #endregion
+
+        #region Ship
+
+        #endregion
     }
 
     enum BattleShipType
@@ -72,20 +78,20 @@ namespace Battleship
     {
         private IBattleShip[,] board { get; set; }
 
-        public BattleBoard(int width, int height)
+        public BattleBoard(int height, int width)
         {
-            board = new BattleShip[width, height];
+            board = new BattleShip[height, width];
         }
 
-        public IBattleShip this[int i, int j]
+        public IBattleShip this[int row, int col]
         {
             get
             {
-                return board[i, j];
+                return board[row, col];
             }
             set
             {
-                board[i, j] = value;
+                board[row, col] = value;
             }
         }
 
@@ -102,7 +108,7 @@ namespace Battleship
 
     class Game
     {
-        public Game(BattleArea playerA, BattleArea playerB)
+        public Game(PlayerBattleArea playerA, PlayerBattleArea playerB)
         {
 
         }
