@@ -93,20 +93,33 @@ namespace Battleship
     {
         public IBattleShip Parent { get; private set; }
         public ShipHealth Health { get; private set; }
+        public int RemainingHits { get; private set; }
+        public BattleShipType Type { get { return Parent.Type; } }
 
         public ShipPart(IBattleShip parent)
         {
+            Parent = parent;
+            RemainingHits = parent.Type == BattleShipType.P ? 1 : 2;
+            Health = ShipHealth.Fresh;
+        }
 
+        public bool AbsorbHit()
+        {
+            RemainingHits--;
+            Health = RemainingHits > 0 ? ShipHealth.Hit : ShipHealth.Destroyed;
+            return RemainingHits > 0 ? true : false;
         }
     }
 
     partial class BattleBoard : IBattleBoard
     {
         private IBattleShip[,] board { get; set; }
+        private IShipPart[,] board2 { get; set; }
 
         public BattleBoard(int height, int width)
         {
             board = new BattleShip[height, width];
+            board2 = new ShipPart[height, width];
         }
 
         public IBattleShip this[int row, int col]
@@ -119,12 +132,14 @@ namespace Battleship
         {
             var y = position.Row - 1;
             var x = position.Column - 1;
+            var counter = 0;
 
             for (int i = y; i < y + ship.Height; i++)
             {
-                for (int j = x; j < x + ship.Width; j++)
+                for (int j = x; j < x + ship.Width; j++, counter++)
                 {
                     this[i, j] = ship;
+                    board2[i, j] = ship.Parts[counter];
                 }
             }
             return true;

@@ -19,7 +19,9 @@ namespace Battleship
 
     interface IShipPart
     {
+        BattleShipType Type { get; }        
         ShipHealth Health { get; }
+        bool AbsorbHit();
     }
 
     interface IBattleBoard
