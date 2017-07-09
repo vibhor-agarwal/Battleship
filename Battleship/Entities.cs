@@ -69,10 +69,10 @@ namespace Battleship
         {
             RemainingHits--;
             Health = RemainingHits > 0 ? ShipHealth.Hit : ShipHealth.Destroyed;
-            if (Health == ShipHealth.Destroyed)
-            {
-                Console.WriteLine("Ship {0}, {1},{2} destroyed", Type, Width, Height);
-            }
+            //if (Health == ShipHealth.Destroyed)
+            //{
+            //    Console.WriteLine("Ship {0}, {1},{2} destroyed", Type, Width, Height);
+            //}
             return RemainingHits > 0 ? true : false;
         }
     }
