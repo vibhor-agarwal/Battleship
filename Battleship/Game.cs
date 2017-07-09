@@ -44,6 +44,7 @@ namespace Battleship
                 if (defender.ShipsAlive < 1)
                 {
                     Console.WriteLine("{0} won the battle", attacker.Id);
+                    break;
                 }
             }
         }

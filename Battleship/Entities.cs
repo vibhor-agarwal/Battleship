@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,6 +55,7 @@ namespace Battleship
         public int Size { get; private set; }
         public int RemainingHits { get; private set; }
         public ShipHealth Health { get; private set; }
+        public List<IShipPart> Parts { get; private set; }
 
         public BattleShip(BattleShipType type, int width, int height)
         {
@@ -63,17 +65,38 @@ namespace Battleship
             Size = Height * Width;
             RemainingHits = Type == BattleShipType.P ? 1 : 2;
             Health = ShipHealth.Fresh;
+            BuildParts();
+        }
+
+        private void BuildParts()
+        {
+            Parts = new List<IShipPart>();
+            for (int i = 0; i < Size; i++)
+            {
+                Parts.Add(new ShipPart(this));
+            }
         }
 
         public bool AbsorbHit()
         {
             RemainingHits--;
             Health = RemainingHits > 0 ? ShipHealth.Hit : ShipHealth.Destroyed;
-            if (Health == ShipHealth.Destroyed)
+            if (Health == ShipHealth.Destroyed && Debugger.IsAttached)
             {
                 Console.WriteLine("Ship {0}, {1},{2} destroyed", Type, Width, Height);
             }
             return RemainingHits > 0 ? true : false;
+        }
+    }
+
+    class ShipPart : IShipPart
+    {
+        public IBattleShip Parent { get; private set; }
+        public ShipHealth Health { get; private set; }
+
+        public ShipPart(IBattleShip parent)
+        {
+
         }
     }
 

@@ -10,10 +10,16 @@ namespace Battleship
     {
         BattleShipType Type { get; }
         ShipHealth Health { get; }
+        List<IShipPart> Parts { get; }
         int Height { get; }
         int Width { get; }
         int Size { get; }
         bool AbsorbHit();
+    }
+
+    interface IShipPart
+    {
+        ShipHealth Health { get; }
     }
 
     interface IBattleBoard
