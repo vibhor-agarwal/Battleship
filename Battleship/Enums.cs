@@ -15,14 +15,14 @@ namespace Battleship.Constants
 		Hit
 	}
 
-	enum ShipHealth
+	enum UnitHealth
 	{
 		Fresh,
 		Hit,
 		Destroyed
 	}
 
-	enum BattleShipType
+	enum UnitType
 	{
 		P = 1,
 		Q = 2

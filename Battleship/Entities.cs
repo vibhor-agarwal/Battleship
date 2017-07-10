@@ -11,18 +11,22 @@ namespace Battleship.Entities
 {
 	class PlayerBattleArea
 	{
+		#region Props
 		public string Id { get; private set; }
-		public BattleBoard Board { get; private set; }
 		public Queue<Attack> AttackSequence { get; private set; }
-		public int ShipsAlive { get { return shipInventory.Count(x => x.Health != ShipHealth.Destroyed); } }
+		public int ShipsAlive { get { return Ships.Count(x => x.Health != UnitHealth.Destroyed); } }
+		#endregion
 
-		private List<IBattleShip> shipInventory { get; set; }
+		#region Private
+		private BattleBoard Board { get; set; }
+		private List<IBattleShip> Ships { get; set; }
+		#endregion
 
 		public PlayerBattleArea(string id, int height, int width)
 		{
 			Id = id;
 			Board = new BattleBoard(height, width);
-			shipInventory = new List<IBattleShip>();
+			Ships = new List<IBattleShip>();
 		}
 
 		#region Configuration
@@ -30,7 +34,7 @@ namespace Battleship.Entities
 		{
 			if (Board.AddShip(ship, position))
 			{
-				shipInventory.Add(ship);
+				Ships.Add(ship);
 			}
 		}
 
@@ -51,77 +55,79 @@ namespace Battleship.Entities
 
 	class BattleShip : IBattleShip
 	{
-		public BattleShipType Type { get; private set; }
+		#region Props
+		public UnitType Type { get; private set; }
 		public int Height { get; private set; }
 		public int Width { get; private set; }
-		public int Size { get; private set; }
-		public int RemainingHits { get; private set; }
-		public List<IShipPart> Parts { get; private set; }
-		public ShipHealth Health
+		public List<IBattleShipPart> Parts { get; private set; }
+		#endregion
+
+		public UnitHealth Health
 		{
 			get
 			{
-				return Parts.All(x => x.Health == ShipHealth.Destroyed) ?
-						ShipHealth.Destroyed : Parts.Any(x => x.Health == ShipHealth.Destroyed) ?
-						ShipHealth.Hit : ShipHealth.Fresh;
+				return Parts.All(x => x.Health == UnitHealth.Destroyed) ?
+						UnitHealth.Destroyed : Parts.Any(x => x.Health == UnitHealth.Destroyed) ?
+						UnitHealth.Hit : UnitHealth.Fresh;
 			}
 		}
 
-		public BattleShip(BattleShipType type, int width, int height)
+		public BattleShip(UnitType type, int width, int height)
 		{
 			Type = type;
 			Height = height;
 			Width = width;
-			Size = Height * Width;
-			RemainingHits = Type == BattleShipType.P ? 1 : 2;
 			BuildParts();
 		}
 
 		private void BuildParts()
 		{
-			Parts = new List<IShipPart>();
-			for (int i = 0; i < Size; i++)
+			Parts = new List<IBattleShipPart>();
+			for (int i = 0; i < Width * Height; i++)
 			{
-				Parts.Add(new ShipPart(this));
+				Parts.Add(new BattleShipPart(this));
 			}
 		}
 	}
 
-	class ShipPart : IShipPart
+	class BattleShipPart : IBattleShipPart
 	{
-		public IBattleShip Parent { get; private set; }
-		public ShipHealth Health { get; private set; }
-		public int RemainingHits { get; private set; }
-		public BattleShipType Type { get { return Parent.Type; } }
+		#region Props
+		public UnitHealth Health { get; private set; }
+		public UnitType Type { get { return Parent.Type; } }
+		#endregion
 
-		public ShipPart(IBattleShip parent)
+		private IBattleShip Parent { get; set; }
+		private int RemainingHits { get; set; }
+
+		public BattleShipPart(IBattleShip parent)
 		{
 			Parent = parent;
-			RemainingHits = parent.Type == BattleShipType.P ? 1 : 2;
-			Health = ShipHealth.Fresh;
+			RemainingHits = parent.Type == UnitType.P ? 1 : 2;
+			Health = UnitHealth.Fresh;
 		}
 
 		public bool AbsorbHit()
 		{
 			RemainingHits--;
-			Health = RemainingHits > 0 ? ShipHealth.Hit : ShipHealth.Destroyed;
+			Health = RemainingHits > 0 ? UnitHealth.Hit : UnitHealth.Destroyed;
 			return RemainingHits > 0 ? true : false;
 		}
 	}
 
 	partial class BattleBoard : IBattleBoard
 	{
-		private IShipPart[,] board { get; set; }
+		private IBattleShipPart[,] Board { get; set; }
 
 		public BattleBoard(int height, int width)
 		{
-			board = new ShipPart[height, width];
+			Board = new IBattleShipPart[height, width];
 		}
 
-		public IShipPart this[int row, int col]
+		public IBattleShipPart this[int row, int col]
 		{
-			get { return board[row, col]; }
-			set { board[row, col] = value; }
+			get { return Board[row, col]; }
+			private set { Board[row, col] = value; }
 		}
 
 		public bool AddShip(IBattleShip ship, IBoardPosition position)
@@ -143,7 +149,7 @@ namespace Battleship.Entities
 		#region Gameplay
 		public bool HandleAttack(Attack attack)
 		{
-			bool attackHandled = true;
+			var attackHandled = true;
 			var shipPart = this[attack.Row - 1, attack.Column - 1];
 			if (shipPart != null)
 			{

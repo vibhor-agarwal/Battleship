@@ -9,24 +9,23 @@ namespace Battleship.Contracts
 {
 	interface IBattleShip
 	{
-		BattleShipType Type { get; }
-		ShipHealth Health { get; }
-		List<IShipPart> Parts { get; }
+		UnitType Type { get; }
+		UnitHealth Health { get; }
+		List<IBattleShipPart> Parts { get; }
 		int Height { get; }
 		int Width { get; }
-		int Size { get; }
 	}
 
-	interface IShipPart
+	interface IBattleShipPart
 	{
-		BattleShipType Type { get; }
-		ShipHealth Health { get; }
+		UnitType Type { get; }
+		UnitHealth Health { get; }
 		bool AbsorbHit();
 	}
 
 	interface IBattleBoard
 	{
-		IShipPart this[int i, int j] { get; }
+		IBattleShipPart this[int i, int j] { get; }
 		bool AddShip(IBattleShip ship, IBoardPosition position);
 	}
 

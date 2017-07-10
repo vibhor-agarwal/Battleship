@@ -16,8 +16,8 @@ namespace Battleship
 		{
 			var player1 = new PlayerBattleArea("Player1", 5, 5);
 
-			player1.AddShip(new BattleShip(BattleShipType.Q, 1, 1), new BattleBoard.Position(1, 1));
-			player1.AddShip(new BattleShip(BattleShipType.P, 2, 1), new BattleBoard.Position(4, 4));
+			player1.AddShip(new BattleShip(UnitType.Q, 1, 1), new BattleBoard.Position(1, 1));
+			player1.AddShip(new BattleShip(UnitType.P, 2, 1), new BattleBoard.Position(4, 4));
 
 			player1.AddAttackSequence(new List<Attack> {
 				new Attack(1,2),
@@ -28,8 +28,8 @@ namespace Battleship
 
 			var player2 = new PlayerBattleArea("Player2", 5, 5);
 
-			player2.AddShip(new BattleShip(BattleShipType.Q, 1, 1), new BattleBoard.Position(2, 2));
-			player2.AddShip(new BattleShip(BattleShipType.P, 2, 1), new BattleBoard.Position(3, 3));
+			player2.AddShip(new BattleShip(UnitType.Q, 1, 1), new BattleBoard.Position(2, 2));
+			player2.AddShip(new BattleShip(UnitType.P, 2, 1), new BattleBoard.Position(3, 3));
 
 			player2.AddAttackSequence(new List<Attack> {
 				new Attack(1,1),

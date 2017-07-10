@@ -24,12 +24,12 @@ namespace Battleship
 
 		public void AutoPlay()
 		{
-			PlayerBattleArea attacker;
-			PlayerBattleArea defender;
 			PlayerBattleArea previousWinner = null;
 
 			while (player1.AttackSequence.Any() || player2.AttackSequence.Any())
 			{
+				PlayerBattleArea attacker;
+				PlayerBattleArea defender;
 				SelectPlayers(out attacker, out defender, previousWinner);
 				if (attacker.AttackSequence.Count > 0)
 				{
