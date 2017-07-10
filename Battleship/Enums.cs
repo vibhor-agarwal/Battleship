@@ -6,25 +6,25 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Specialized;
 
-namespace Battleship
+namespace Battleship.Constants
 {
-    enum AttackResult
-    {
-        Unknown,
-        Miss,
-        Hit
-    }
+	enum AttackResult
+	{
+		Unknown,
+		Miss,
+		Hit
+	}
 
-    enum ShipHealth
-    {
-        Fresh,
-        Hit,
-        Destroyed
-    }
+	enum UnitHealth
+	{
+		Fresh,
+		Hit,
+		Destroyed
+	}
 
-    enum BattleShipType
-    {
-        P = 1,
-        Q = 2
-    }
+	enum UnitType
+	{
+		P = 1,
+		Q = 2
+	}
 }
