@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Battleship.Constants;
+using Battleship.Contracts;
 
-namespace Battleship
+namespace Battleship.Entities
 {
 	class PlayerBattleArea
 	{

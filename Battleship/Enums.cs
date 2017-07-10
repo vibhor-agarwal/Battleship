@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Specialized;
 
-namespace Battleship
+namespace Battleship.Constants
 {
 	enum AttackResult
 	{

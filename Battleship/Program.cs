@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Specialized;
+using Battleship.Constants;
+using Battleship.Entities;
 
 namespace Battleship
 {
