@@ -54,8 +54,16 @@ namespace Battleship
 		public int Width { get; private set; }
 		public int Size { get; private set; }
 		public int RemainingHits { get; private set; }
-		public ShipHealth Health { get; private set; }
 		public List<IShipPart> Parts { get; private set; }
+		public ShipHealth Health
+		{
+			get
+			{
+				return Parts.All(x => x.Health == ShipHealth.Destroyed) ?
+						ShipHealth.Destroyed : Parts.Any(x => x.Health == ShipHealth.Destroyed) ?
+						ShipHealth.Hit : ShipHealth.Fresh;
+			}
+		}
 
 		public BattleShip(BattleShipType type, int width, int height)
 		{
@@ -64,7 +72,6 @@ namespace Battleship
 			Width = width;
 			Size = Height * Width;
 			RemainingHits = Type == BattleShipType.P ? 1 : 2;
-			Health = ShipHealth.Fresh;
 			BuildParts();
 		}
 
@@ -75,17 +82,6 @@ namespace Battleship
 			{
 				Parts.Add(new ShipPart(this));
 			}
-		}
-
-		public bool AbsorbHit()
-		{
-			RemainingHits--;
-			Health = RemainingHits > 0 ? ShipHealth.Hit : ShipHealth.Destroyed;
-			if (Health == ShipHealth.Destroyed && Debugger.IsAttached)
-			{
-				Console.WriteLine("Ship {0}, {1},{2} destroyed", Type, Width, Height);
-			}
-			return RemainingHits > 0 ? true : false;
 		}
 	}
 
@@ -113,16 +109,14 @@ namespace Battleship
 
 	partial class BattleBoard : IBattleBoard
 	{
-		private IBattleShip[,] board { get; set; }
-		private IShipPart[,] board2 { get; set; }
+		private IShipPart[,] board { get; set; }
 
 		public BattleBoard(int height, int width)
 		{
-			board = new BattleShip[height, width];
-			board2 = new ShipPart[height, width];
+			board = new ShipPart[height, width];
 		}
 
-		public IBattleShip this[int row, int col]
+		public IShipPart this[int row, int col]
 		{
 			get { return board[row, col]; }
 			set { board[row, col] = value; }
@@ -138,8 +132,7 @@ namespace Battleship
 			{
 				for (int j = x; j < x + ship.Width; j++, counter++)
 				{
-					this[i, j] = ship;
-					board2[i, j] = ship.Parts[counter];
+					this[i, j] = ship.Parts[counter];
 				}
 			}
 			return true;
@@ -149,11 +142,11 @@ namespace Battleship
 		public bool HandleAttack(Attack attack)
 		{
 			bool attackHandled = true;
-			var ship = this[attack.Row - 1, attack.Column - 1];
-			if (ship != null)
+			var shipPart = this[attack.Row - 1, attack.Column - 1];
+			if (shipPart != null)
 			{
 				attack.Result = AttackResult.Hit;
-				if (!ship.AbsorbHit())
+				if (!shipPart.AbsorbHit())
 				{
 					this[attack.Row - 1, attack.Column - 1] = null;
 					attackHandled = false;

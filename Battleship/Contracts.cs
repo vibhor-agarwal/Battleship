@@ -14,7 +14,6 @@ namespace Battleship
 		int Height { get; }
 		int Width { get; }
 		int Size { get; }
-		bool AbsorbHit();
 	}
 
 	interface IShipPart
@@ -26,7 +25,7 @@ namespace Battleship
 
 	interface IBattleBoard
 	{
-		IBattleShip this[int i, int j] { get; }
+		IShipPart this[int i, int j] { get; }
 		bool AddShip(IBattleShip ship, IBoardPosition position);
 	}
 
