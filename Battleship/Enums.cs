@@ -8,23 +8,23 @@ using System.Collections.Specialized;
 
 namespace Battleship
 {
-    enum AttackResult
-    {
-        Unknown,
-        Miss,
-        Hit
-    }
+	enum AttackResult
+	{
+		Unknown,
+		Miss,
+		Hit
+	}
 
-    enum ShipHealth
-    {
-        Fresh,
-        Hit,
-        Destroyed
-    }
+	enum ShipHealth
+	{
+		Fresh,
+		Hit,
+		Destroyed
+	}
 
-    enum BattleShipType
-    {
-        P = 1,
-        Q = 2
-    }
+	enum BattleShipType
+	{
+		P = 1,
+		Q = 2
+	}
 }
