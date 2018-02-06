@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Specialized;
+using Battleship.Constants;
+using Battleship.Entities;
 
 namespace Battleship
 {
@@ -11,71 +14,39 @@ namespace Battleship
 	{
 		static void Main(string[] args)
 		{
-			var player1 = new BattleArea(5, 5);
-			player1.AddShips(new[]
-			{
-				new BattleShip(BattleShipType.P, 1, 1),
-				new BattleShip(BattleShipType.P, 1, 1),
+			var player1 = new PlayerBattleArea("Player1", 5, 5);
+
+			player1.AddShip(new BattleShip(UnitType.Q, 1, 1), new BattleBoard.Position(1, 1));
+			player1.AddShip(new BattleShip(UnitType.P, 2, 1), new BattleBoard.Position(4, 4));
+
+			player1.AddAttackSequence(new List<Attack> {
+				new Attack(1,2),
+				new Attack(2,2),
+				new Attack(2,2),
+				new Attack(2,3)
 			});
 
-			var game = new Game(new BattleArea(5, 5), new BattleArea(5, 5));
+			var player2 = new PlayerBattleArea("Player2", 5, 5);
+
+			player2.AddShip(new BattleShip(UnitType.Q, 1, 1), new BattleBoard.Position(2, 2));
+			player2.AddShip(new BattleShip(UnitType.P, 2, 1), new BattleBoard.Position(3, 3));
+
+			player2.AddAttackSequence(new List<Attack> {
+				new Attack(1,1),
+				new Attack(2,2),
+				new Attack(2,3),
+				new Attack(1,1),
+				new Attack(4,1),
+				new Attack(5,1),
+				new Attack(4,4),
+				new Attack(4,4),
+				new Attack(4,5),
+				new Attack(4,5)
+			});
+
+			var game = new Game(player1, player2);
 			game.AutoPlay();
-		}
-	}
-
-	class BattleArea
-	{
-		public BattleShip[,] BattleBoard { get; private set; }
-
-		public BattleArea(int width, int height)
-		{
-			BattleBoard = new BattleShip[width, height];
-		}
-
-		public BattleArea(int width, int height, IEnumerable<BattleShip> ships) : this(width, height)
-		{
-			AddShips(ships);
-		}
-
-		public void AddShip(BattleShip ship)
-		{
-
-		}
-		public void AddShips(IEnumerable<BattleShip> ships)
-		{
-
-		}
-	}
-
-	enum BattleShipType
-	{
-		P = 1,
-		Q = 2
-	}
-
-	class BattleShip
-	{
-		public BattleShipType Type { get; private set; }
-		public int Height { get; private set; }
-		public int Width { get; private set; }
-
-		public BattleShip(BattleShipType type, int height, int width)
-		{
-			Type = type;
-			Height = height;
-			Width = width;
-		}
-	}
-
-	class Game
-	{
-		public Game(BattleArea playerA, BattleArea playerB)
-		{
-
-		}
-
-		public void AutoPlay()
-		{
+			Console.ReadLine();
 		}
 	}
 }
